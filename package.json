@@ -1,0 +1,23 @@
+{
+  "name": "Algorithm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Renford/Algorithm.git"
+  },
+  "keywords": [],
+  "author": "Renford <chaofree3088@sina.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Renford/Algorithm/issues"
+  },
+  "homepage": "https://github.com/Renford/Algorithm#readme",
+  "dependencies": {
+    "eslint": "^4.16.0"
+  }
+}
