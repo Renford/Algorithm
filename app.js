@@ -1,4 +1,6 @@
 
+// import Sort from './code/sort.js'
+
 const MaxInteger = 10;
 
 const produceArray = () => {
@@ -25,8 +27,27 @@ const bubbleSort = (arr) => {
     return array
 }
 
+// 选择排序
+const selectSort = (arr) => {
+    let array = arr.slice(0);
+    for (let i = 0; i < array.length - 1; i++) {
+        let index = i;
+        for (let j = i + 1; j < array.length; j++) {
+            if (array[j] < array[index]) {
+                index = j;
+            }
+        }
+        if (i !== index) {
+            [array[i], array[index]] = [array[index], array[i]];
+        }
+    }
+    return array;
+}
+
 let arr = produceArray()
 console.log('===============sort before:\n', arr);
-let array = bubbleSort(arr);
-console.log('===============sort after:\n', arr, '\n', array);
+let array1 = bubbleSort(arr);
+console.log('===============buddle sort after:\n', arr, '\n', array1);
+let array2 = selectSort(arr);
+console.log('===============select sort after:\n', arr, '\n', array2);
 
