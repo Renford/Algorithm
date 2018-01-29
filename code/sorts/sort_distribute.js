@@ -1,5 +1,4 @@
 
-
 // 初始化桶
 const BucketCount = 10;
 const bucketInit = (count) => {
@@ -51,15 +50,29 @@ const bucketSort = (arr) => {
     return arr;
 }
 
-
-
 // 基数排序
 
+const radixSort = (arr) => {
+    let buckets = bucketInit(BucketCount);
+
+    let maxLength = 1;
+    for (let i = 0; i < arr.length; i++) {
+        if (maxLength < arr[i].toString().length) {
+            maxLength = arr[i].toString().length;
+        }
+
+        let index = arr[i] % 10;
+        buckets[index].push(arr[i]);
+    }
+
+    
+}
 
 // 计数排序
 
 // 珠排序
 
 module.exports = {
-    bucketSort: bucketSort
+    bucketSort: bucketSort,
+    radixSort: radixSort
 }

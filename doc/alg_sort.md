@@ -9,7 +9,7 @@
 
 ## 交换类
 
-[Javascript代码看这里](../code/sorts/sort-exchange.js)
+[Javascript代码看这里](../code/sorts/sort_exchange.js)
 
 #### 冒泡排序
 
@@ -35,7 +35,7 @@
 
 ## 选择类
 
-[Javascript代码看这里](../code/sorts/sort-select.js)
+[Javascript代码看这里](../code/sorts/sort_select.js)
 
 #### 选择排序
 
@@ -59,7 +59,7 @@
 
 ## 插入类
 
-[Javascript代码看这里](../code/sorts/sort-insert.js)
+[Javascript代码看这里](../code/sorts/sort_insert.js)
 
 #### 插入排序
 
@@ -89,7 +89,7 @@
 
 ## 归并类
 
-[Javascript代码看这里](../code/sorts/sort-merge.js)
+[Javascript代码看这里](../code/sorts/sort_merge.js)
 
 #### 归并排序
 
@@ -105,7 +105,7 @@
 
 ## 分布类
 
-[Javascript代码看这里](../code/sorts/sort-distribute.js)
+[Javascript代码看这里](../code/sorts/sort_distribute.js)
 
 #### 桶排序
 
@@ -119,6 +119,19 @@
 假定数据量为N，桶个数为M
 + 时间复杂度：平均为O(N+C)，其中C=N*(logN-logM)，最好为O(N)
 + 空间复杂度：O(N+M)
+
+#### 基数排序
+
++ MSD：最高位优先(Most Significant Digit first)法
+    1. 先按k1排序分组，同一组中记录，关键码k1相等，
+    2. 按顺序收集序列，再对k2重复1操作，
+    3. 对后面的关键码继续这样的排序分组，直到按最次位关键码kd对各子组排序后。
+    4. 再将各组连接起来，便得到一个有序序列。
++ LSD：最低位优先(Least Significant Digit first)法
+    先从kd开始排序，再对kd-1进行排序，依次重复，直到对k1排序后便得到一个有序序列。
+
++ 时间复杂度：O(d(n+radix))，其中，一趟分配时间复杂度为O(n)，一趟收集时间复杂度为O(radix)，共进行d趟分配和收集
++ 空间复杂度：O(2*radix)
 
 ## 并发类
 
