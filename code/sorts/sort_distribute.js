@@ -9,6 +9,8 @@ const bucketInit = (count) => {
     return buckets;
 }
 
+// -----桶排序----- //
+
 // 插入时，完成排序
 const insertSort = (arr, value) => {
     let j = arr.length - 1;
@@ -50,22 +52,50 @@ const bucketSort = (arr) => {
     return arr;
 }
 
-// 基数排序
+// -----基数排序----- //
 
-const radixSort = (arr) => {
-    let buckets = bucketInit(BucketCount);
-
+// 1、数据分发
+const distributeData = (arr, buckets, index) => {
     let maxLength = 1;
     for (let i = 0; i < arr.length; i++) {
         if (maxLength < arr[i].toString().length) {
             maxLength = arr[i].toString().length;
         }
 
-        let index = arr[i] % 10;
-        buckets[index].push(arr[i]);
+        let tempIndex = Math.floor(arr[i] / Math.pow(10, index)) % 10;
+        buckets[tempIndex].push(arr[i]);
+    }
+    return maxLength;
+}
+
+// 2、数据收集
+const collectData = (buckets) => {
+    let tempArray = []
+    for(let i = 0; i < buckets.length; i++) {
+        for(let j = 0; j < buckets[i].length; j++) {
+            tempArray.push(buckets[i][j]);
+        }
+    }
+    return tempArray;
+}
+
+// 3、基数排序
+const radixSort = (arr) => {
+    let array = arr.slice(0);
+
+    let buckets = bucketInit(BucketCount);
+    const maxLength = distributeData(array, buckets, 0);
+    array = collectData(buckets);
+
+    let i = 1;
+    while (i < maxLength) {
+        buckets = bucketInit(BucketCount);
+        distributeData(array, buckets, i);
+        array = collectData(buckets);
+        i++;
     }
 
-    
+    return array;
 }
 
 // 计数排序

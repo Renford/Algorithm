@@ -32,6 +32,8 @@ let array7 = sort.mergeSort(arr.slice(0));
 console.log('7、===============merge sort after:\n', array7);
 let array8 = sort.bucketSort(arr.slice(0));
 console.log('8、===============bukect sort after:\n', array8);
+let array9 = sort.radixSort(arr.slice(0));
+console.log('9、===============radix sort after:\n', array9);
 
 
 
