@@ -16,24 +16,33 @@ const produceArray = () => {
 
 let arr = produceArray()
 console.log('0、===============sort before:\n', arr);
-let array1 = sort.bubbleSort(arr.slice(0));
-console.log('1、===============buddle sort after:\n', array1);
-let array2 = sort.quickSort(arr, 0, arr.length - 1);
-console.log('2、===============quick sort after:\n', array2);
-let array3 = sort.selectSort(arr.slice(0));
-console.log('3、===============select sort after:\n', array3);
-let array4 = sort.insertSort(arr.slice(0));
-console.log('4、===============insert sort after:\n', array4);
-let array5 = sort.shellSort(arr.slice(0));
-console.log('5、===============shell sort after:\n', array5);
-let array6 = sort.heapSort(arr.slice(0));
-console.log('6、===============heap sort after:\n', array6);
-let array7 = sort.mergeSort(arr.slice(0));
-console.log('7、===============merge sort after:\n', array7);
-let array8 = sort.bucketSort(arr.slice(0));
-console.log('8、===============bukect sort after:\n', array8);
-let array9 = sort.radixSort(arr.slice(0));
-console.log('9、===============radix sort after:\n', array9);
+
+let array11 = sort.bubbleSort(arr.slice(0));
+console.log('\n1、exchange class:\n bubble sort:\n', array11);
+let array12 = sort.quickSort(arr, 0, arr.length - 1);
+console.log('quick sort:\n', array12);
+
+
+let array21 = sort.selectSort(arr.slice(0));
+console.log('\n2、select class:\n select sort:\n', array21);
+let array22 = sort.heapSort(arr.slice(0));
+console.log('heap sort:\n', array22);
+
+
+let array31 = sort.insertSort(arr.slice(0));
+console.log('\n3、insert class:\ninsert sort:\n', array31);
+let array32 = sort.binaryInsertSort(arr.slice(0));
+console.log('binary insert sort:\n', array32);
+let array33 = sort.shellSort(arr.slice(0));
+console.log('shell sort:\n', array33);
+
+
+let array41 = sort.mergeSort(arr.slice(0));
+console.log('\n4、merge class:\nmerge sort:\n', array41);
+let array42 = sort.bucketSort(arr.slice(0));
+console.log('bukect sort:\n', array42);
+let array43 = sort.radixSort(arr.slice(0));
+console.log('radix sort:\n', array43);
 
 
 

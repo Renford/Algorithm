@@ -29,20 +29,21 @@ const binaryInsertSort = (arr) => {
         let temp = array[i];
 
         let begin = 0;
-        let end = i -1;
-        let mid = Math.round((begin + end) / 2);
-        while (begin < end) {
-            if (array[mid] > temp) {
+        let end = i - 1;
+        while (begin <= end) {
+            let mid = Math.round((begin + end) / 2);
+            if (temp > array[mid]) {
                 begin = mid + 1;
             } else {
                 end = mid - 1;
             }
-        }
+        }    
 
         for (let j = i; j > begin; j--) {
             array[j] = array[j - 1];
         }
         array[begin] = temp; 
+
     }
     return array;
 }
