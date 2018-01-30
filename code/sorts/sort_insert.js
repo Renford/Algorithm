@@ -1,5 +1,5 @@
 
-// 插入排序
+// 直接插入排序
 const insertSort = (arr) => {
     let array = arr.slice(0);
     for (let i = 1; i < array.length; i++) {
@@ -18,6 +18,31 @@ const insertSort = (arr) => {
         if (j < 0) {
             array[0] = temp;
         }
+    }
+    return array;
+}
+
+// 折半插入排序
+const binaryInsertSort = (arr) => {
+    let array = arr.slice(0);
+    for (let i = 1; i < array.length; i++) {
+        let temp = array[i];
+
+        let begin = 0;
+        let end = i -1;
+        let mid = Math.round((begin + end) / 2);
+        while (begin < end) {
+            if (array[mid] > temp) {
+                begin = mid + 1;
+            } else {
+                end = mid - 1;
+            }
+        }
+
+        for (let j = i; j > begin; j--) {
+            array[j] = array[j - 1];
+        }
+        array[begin] = temp; 
     }
     return array;
 }
@@ -45,5 +70,6 @@ const shellSort = (arr) => {
 
 module.exports = {
     insertSort: insertSort,
+    binaryInsertSort: binaryInsertSort,
     shellSort: shellSort
 }
