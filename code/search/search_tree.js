@@ -172,6 +172,13 @@ class BinarySearchTree extends BinaryTree {
 
 // -------------------------平衡二叉树------------------------------//
 
+class AVLNode extends TreeNode {
+    constructor(data, height, left, right) {
+        super(data, left, right);
+        this.height = height;
+    }
+}
+
 // 平衡二叉树
 // 插入、删除都按照平衡二叉树的规则操作
 class AVLBinaryTree extends BinaryTree {
