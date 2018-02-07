@@ -192,144 +192,14 @@ class AVLBinaryTree extends BinaryTree {
         }
     }
 
-    insertNodeByAVL(data) {
-
-        let node = new TreeNode(data)
-        if (this.root == null) {
-            this.root = node;
-            return true;
-        }
-
-        let success = true;
-        let n0 = null;      // n1的父节点
-        let n1 = this.root; // data要插入路径上第一个只有一个子树的节点
-        while(1) {
-
-            if (data == n1.data) {
-                success = false;
-                break;
-            }
-
-            if (n1.left != null && n1.right == null) {
-                // only left
-                if (data < n1.data) {
-                    if (data < n1.left.data) {
-                        // node - left - left
-                        if (n0 == null) {
-                            this.root = n1.left;
-                        } else if (n0.left == n1) {
-                            n0.left = n1.left;
-                        } else {
-                            n0.right = n1.left;
-                        }
-                        n1.left.left = node;
-                        n1.left.right = n1.left;
-                        n1.left = null;
-                    } else if (data > n1.left.data) {
-                        // node - left - right
-                        if (n0 == null) {
-                            this.root = node
-                        } else if (n0.left == n1) {
-                            n0.left = node;
-                        } else {
-                            n0.right = node;
-                        }
-                        node.left = n1.left;
-                        node.right = n1;
-                        n1.left = null;
-                    } else {
-                        success = false;
-                    }
-                } else {
-                    n1.right = node;
-                }
-                break;
-            } else if (n1.left == null && n1.right != null) {
-                // only right
-                if (data > n1.data) {
-                    if (data > n1.right.data && n1.right.left == null) {
-                        // node - right - right
-                        if (n0 == null) {
-                            this.root = n1.right
-                        } else if (n0.left == n1) {
-                            n0.left = n1.right;
-                        } else {
-                            n0.right = n1.right;
-                        }
-                        n1.right.left = n1;
-                        n1.right.right = node;
-                        n1.right = null;
-                    } else if (data < n1.right && n1.right.right == null) {
-                        // node - right - left
-                        if (n0 == null) {
-                            this.root = node
-                        } else if (n0.left == n1) {
-                            n0.left = node;
-                        } else {
-                            n0.right = node;
-                        }
-                        node.left = n1;
-                        node.right = n1.right;
-                        n1.right = null;
-                    } else {
-                        success = false;
-                    }
-                } else {
-                    n1.left = node;
-                }
-                break;
-            } else if (n1.left != null && n1.right != null) {
-                // left and right
-                if (data < n1.data) {
-                    n0 = n1;
-                    n1 = n1.left;
-                    
-                } else if (data > n1.data) {
-                    n0 = n1;
-                    n1 = n1.right;
-                } else {
-                    success = false;
-                    break;
-                }
-                
-            } else {
-                // 叶子节点
-                if (data < n1.data) {
-                    n1.left = node; 
-                } else if (data > n1.data) {
-                    n1.right = node;
-                } else {
-                    success = false;
-                }
-                break;
-            }
-            
-        }
-
-        return success;
+    insertNodeByAVL(avlNode, data) {
+        let result = _insertNodeByAVL(avlNode, data)
+        console.log('avl insert result:', result);
     }
 
-    deleteNodeByAVL(data) {
-
+    deleteNodeByAvl(avlNode, data) {
+        
     }
-}
-
-// 查找，存在：返回该节点与父节点，不存在：返回[null, super]
-const _searchNodeAndSuper = (tree, data) => {
-    let node = tree;
-    let superNode = null;
-    while (node != null) {
-        if (data < node.data) {
-            superNode = node;
-            node = node.left;
-        } else if (data > node.data) {
-            superNode = node;
-            node = node.right;
-        } else {
-            break;
-        }
-    }
-    return [node, superNode];
 }
 
 const _searchNode = (node, data) => {
@@ -344,6 +214,81 @@ const _searchNode = (node, data) => {
     } else {
         return node;
     }
+}
+
+const _insertNodeByAVL = (avlNode, data) => {
+    let sucess = true;
+    if (avlNode == null) {
+        avlNode = new AVLNode(data);
+    } else if (data < avlNode.data) {
+        _insertNodeByAVL(avlNode.left, data);
+
+        if (_getNodeHeight(avlNode.left) - _getNodeHeight(avlNode.right) > 1) {
+            if (data < avlNode.left.data) {
+                // 左左旋转
+                avlNode = _llRotate(avlNode);
+            } else {
+                // 左右旋转
+                avlNode = _lrRotate(avlNode);
+            }
+        }
+    } else if (data > avlNode.data) {
+        _insertNodeByAVL(avlNode.right, data);
+        if (_getNodeHeight(avlNode.right) - _getNodeHeight(avlNode.left) > 1) {
+            if (data > avlNode.data) {
+                // 右右旋转
+                avlNode = _rrRotate(avlNode);
+            } else {
+                // 右左旋转
+                avlNode = _rlRotate(avlNode);
+            }   
+        }
+    } else {
+        // 重复数据、插入失败
+        sucess = false
+    }
+
+    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
+
+    return false;
+}
+
+const _getNodeHeight = (node) => {
+    let height = -1;
+    if (node != null) {
+        height = node.height;
+    }
+    return height;
+}
+
+const _llRotate = (avlNode) => {
+    let node = avlNode.left;
+    avlNode.left = node.right;
+    node.right = avlNode;
+    avlNode = node;
+    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right));
+    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right));
+    return node;
+}
+
+const _rrRotate = (avlNode) => {
+    let node = avlNode.right;
+    avlNode.right = node.left;
+    node.left = avlNode;
+    avlNode = node;
+    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right));
+    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right));
+    return node;
+}
+
+const _lrRotate = (avlNode) => {
+    _rrRotate(avlNode.left);
+    return _llRotate(avlNode);
+}
+
+const _rlRotate = (avlNode) => {
+    _llRotate(avlNode.right);
+    return _rrRotate(avlNode);
 }
 
 module.exports = {
