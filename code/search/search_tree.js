@@ -187,20 +187,16 @@ class AVLBinaryTree extends BinaryTree {
         this.root = null;
         for (let i = 0; i < arr.length; i++) {
             let [success, avlNode] = this.insertNodeByAVL(this.root, arr[i]);
-            if (this.root == null) {
-                this.root = avlNode;
-            }
-            console.log('insert result===========:', i, success, avlNode);
-            this.travalTreeByPreOrder(this.root);
+            this.root = avlNode;
         }
     }
 
     insertNodeByAVL(avlNode, data) {
-        return _insertNodeByAVL(avlNode, data)
+        return _insertNodeByAVL(avlNode, data);
     }
 
     deleteNodeByAvl(avlNode, data) {
-        
+        return _deleteNodeByAVL(avlNode, data);
     }
 }
 
@@ -237,7 +233,6 @@ const _searchNode = (node, data) => {
 }
 
 const _insertNodeByAVL = (avlNode, data) => {
-    // console.log('avl node =====', avlNode, data)
     let sucess = true;
     if (avlNode == null) {
         avlNode = new AVLNode(data);
@@ -261,7 +256,7 @@ const _insertNodeByAVL = (avlNode, data) => {
         if (sucess == true) {
             avlNode.right = rightNode;
         }
-
+       
         if (_getNodeHeight(avlNode.right) - _getNodeHeight(avlNode.left) > 1) {
             if (data > avlNode.data) {
                 // 右右旋转
@@ -281,6 +276,11 @@ const _insertNodeByAVL = (avlNode, data) => {
     return [sucess, avlNode];
 }
 
+
+const _deleteNodeByAVL = (avlNode, data) => {
+
+}
+
 const _getNodeHeight = (node) => {
     let height = -1;
     if (node != null) {
@@ -293,9 +293,9 @@ const _llRotate = (avlNode) => {
     let node = avlNode.left;
     avlNode.left = node.right;
     node.right = avlNode;
-    avlNode = node;
-    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right));
-    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right));
+    // avlNode = node;
+    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
+    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
     return node;
 }
 
@@ -303,9 +303,9 @@ const _rrRotate = (avlNode) => {
     let node = avlNode.right;
     avlNode.right = node.left;
     node.left = avlNode;
-    avlNode = node;
-    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right));
-    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right));
+    // avlNode = node;
+    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
+    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
     return node;
 }
 

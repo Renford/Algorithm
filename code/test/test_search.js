@@ -33,5 +33,5 @@ tree21.travalTreeByInOrder(tree21.root);
 
 
 const tree22 = new search.AVLBinaryTree(arr);
-console.log('tree22======', tree22);
+console.log('tree22==========avl tree:');
 tree22.travalTreeByInOrder(tree22.root);
