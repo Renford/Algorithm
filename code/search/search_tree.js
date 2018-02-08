@@ -186,20 +186,40 @@ class AVLBinaryTree extends BinaryTree {
         super();
         this.root = null;
         for (let i = 0; i < arr.length; i++) {
-            let rlt = this.insertNodeByAVL(arr[i]);
-            console.log('insert result===========:', i, rlt);
+            let [success, avlNode] = this.insertNodeByAVL(this.root, arr[i]);
+            if (this.root == null) {
+                this.root = avlNode;
+            }
+            console.log('insert result===========:', i, success, avlNode);
             this.travalTreeByPreOrder(this.root);
         }
     }
 
     insertNodeByAVL(avlNode, data) {
-        let result = _insertNodeByAVL(avlNode, data)
-        console.log('avl insert result:', result);
+        return _insertNodeByAVL(avlNode, data)
     }
 
     deleteNodeByAvl(avlNode, data) {
         
     }
+}
+
+// 查找，存在：返回该节点与父节点，不存在：返回[null, super]
+const _searchNodeAndSuper = (tree, data) => {
+    let node = tree;
+    let superNode = null;
+    while (node != null) {
+        if (data < node.data) {
+            superNode = node;
+            node = node.left;
+        } else if (data > node.data) {
+            superNode = node;
+            node = node.right;
+        } else {
+            break;
+        }
+    }
+    return [node, superNode];
 }
 
 const _searchNode = (node, data) => {
@@ -217,11 +237,15 @@ const _searchNode = (node, data) => {
 }
 
 const _insertNodeByAVL = (avlNode, data) => {
+    // console.log('avl node =====', avlNode, data)
     let sucess = true;
     if (avlNode == null) {
         avlNode = new AVLNode(data);
     } else if (data < avlNode.data) {
-        _insertNodeByAVL(avlNode.left, data);
+        let [sucess, leftNode] = _insertNodeByAVL(avlNode.left, data);
+        if (sucess == true) {
+            avlNode.left = leftNode;
+        }
 
         if (_getNodeHeight(avlNode.left) - _getNodeHeight(avlNode.right) > 1) {
             if (data < avlNode.left.data) {
@@ -233,7 +257,11 @@ const _insertNodeByAVL = (avlNode, data) => {
             }
         }
     } else if (data > avlNode.data) {
-        _insertNodeByAVL(avlNode.right, data);
+        let [success, rightNode] = _insertNodeByAVL(avlNode.right, data);
+        if (sucess == true) {
+            avlNode.right = rightNode;
+        }
+
         if (_getNodeHeight(avlNode.right) - _getNodeHeight(avlNode.left) > 1) {
             if (data > avlNode.data) {
                 // 右右旋转
@@ -250,7 +278,7 @@ const _insertNodeByAVL = (avlNode, data) => {
 
     avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
 
-    return false;
+    return [sucess, avlNode];
 }
 
 const _getNodeHeight = (node) => {
@@ -294,5 +322,5 @@ const _rlRotate = (avlNode) => {
 module.exports = {
     BinaryTree: BinaryTree,
     BinarySearchTree: BinarySearchTree,
-    AVLBinaryTree: AVLBinaryTree
+    AVLBinaryTree: AVLBinaryTree,
 }
