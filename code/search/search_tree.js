@@ -278,9 +278,43 @@ const _insertNodeByAVL = (avlNode, data) => {
 
 
 const _deleteNodeByAVL = (avlNode, data) => {
+    
+    if (avlNode == null) {
+        return [false, null];
+    }
 
+    let sucess = true;
+
+    if (data == avlNode.data) {
+
+        if (avlNode.left != null && avlNode.right != null) {
+            // 左右子树均不为空
+            if (_getNodeHeight(avlNode.left) > _getNodeHeight(avlNode.right)) {
+                // 左子树高度大
+
+            } else {
+                // 右子树高度大
+
+            }
+
+        } else {
+
+        }
+
+    } else if (data < avlNode.data) {
+        
+        _deleteNodeByAVL(avlNode.right, data)
+
+    } else if (data > avlNode.data) {
+
+        _deleteNodeByAVL(avlNode.left, data)
+
+    }
+
+    return [sucess, avlNode];
 }
 
+// 获取二叉树的高度
 const _getNodeHeight = (node) => {
     let height = -1;
     if (node != null) {
@@ -289,31 +323,55 @@ const _getNodeHeight = (node) => {
     return height;
 }
 
+// 获取二叉树最大值的节点
+const _getMaxNode = (node) => {
+    if (node == null) {
+        return null;
+    }
+    if (node.right == null) {
+        return node;
+    }
+    return _getMaxNode(node.right);
+}
+
+// 获取二叉搜索树最小值的节点
+const _getMinNode = (node) => {
+    if (node == null) {
+        return null;
+    }
+    if (node.left == null) {
+        return node;
+    }
+    return _getMinNode(node.left);
+}
+
+// 左左旋转
 const _llRotate = (avlNode) => {
     let node = avlNode.left;
     avlNode.left = node.right;
     node.right = avlNode;
-    // avlNode = node;
     avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
     node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
     return node;
 }
 
+// 右右旋转
 const _rrRotate = (avlNode) => {
     let node = avlNode.right;
     avlNode.right = node.left;
     node.left = avlNode;
-    // avlNode = node;
     node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
     avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
     return node;
 }
 
+// 左右旋转
 const _lrRotate = (avlNode) => {
     _rrRotate(avlNode.left);
     return _llRotate(avlNode);
 }
 
+// 右左旋转
 const _rlRotate = (avlNode) => {
     _llRotate(avlNode.right);
     return _rrRotate(avlNode);
