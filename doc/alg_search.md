@@ -106,7 +106,7 @@ __元素必须是有序的，如果是无序的则要先进行排序操作__
 <!-- http://blog.csdn.net/sun_tttt/article/details/65445754 -->
 <!-- http://blog.csdn.net/eson_15/article/details/51144079 -->
 
-[红黑树图例](./res/res_red_black.png)
+![红黑树图例](./res/res_red_black.png)
 
 #### 伸展树
 
