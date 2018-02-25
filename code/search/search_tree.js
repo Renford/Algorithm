@@ -186,17 +186,21 @@ class AVLBinaryTree extends BinaryTree {
         super();
         this.root = null;
         for (let i = 0; i < arr.length; i++) {
-            let [success, avlNode] = this.insertNodeByAVL(this.root, arr[i]);
-            this.root = avlNode;
+            let success = this.insertNodeByAVL(arr[i]);
+            console.log('insert======', success);
         }
     }
 
-    insertNodeByAVL(avlNode, data) {
-        return _insertNodeByAVL(avlNode, data);
+    insertNodeByAVL(data) {
+        let [success, avlNode] = _insertNodeByAVL(this.root, data);
+        this.root = avlNode;
+        return success;
     }
 
-    deleteNodeByAvl(avlNode, data) {
-        return _deleteNodeByAVL(avlNode, data);
+    deleteNodeByAVL(data) {
+        let [success, avlNode] = _deleteNodeByAVL(this.root, data);
+        this.root = avlNode;
+        return success;
     }
 }
 
@@ -258,7 +262,7 @@ const _insertNodeByAVL = (avlNode, data) => {
         }
        
         if (_getNodeHeight(avlNode.right) - _getNodeHeight(avlNode.left) > 1) {
-            if (data > avlNode.data) {
+            if (data > avlNode.right.data) {
                 // 右右旋转
                 avlNode = _rrRotate(avlNode);
             } else {
@@ -278,40 +282,84 @@ const _insertNodeByAVL = (avlNode, data) => {
 
 
 const _deleteNodeByAVL = (avlNode, data) => {
-    
+
     if (avlNode == null) {
         return [false, null];
     }
 
-    let sucess = true;
+    let success = true;
 
     if (data == avlNode.data) {
 
         if (avlNode.left != null && avlNode.right != null) {
             // 左右子树均不为空
+            let node = null;
             if (_getNodeHeight(avlNode.left) > _getNodeHeight(avlNode.right)) {
                 // 左子树高度大
-
+                let node = _getMaxNode(avlNode.left);
+                avlNode.data = node.data
+                let [succ, tempNode] = _deleteNodeByAVL(avlNode.left, node.data);
+                sucess = succ;
+                avlNode.left = tempNode;
             } else {
                 // 右子树高度大
-
+                let node = _getMinNode(avlNode.right);
+                avlNode.data = node.data
+                let [succ, tempNode] = _deleteNodeByAVL(avlNode.right, node.data);
+                success = succ;
+                avlNode.right = tempNode;
             }
 
         } else {
-
+            if (avlNode.left != null) {
+                avlNode = avlNode.left;
+            } else if (avlNode.right != null) {
+                avlNode = avlNode.right;
+            } else {
+                avlNode = null;
+            }
         }
 
     } else if (data < avlNode.data) {
         
-        _deleteNodeByAVL(avlNode.right, data)
+        let [succ, tempNode] = _deleteNodeByAVL(avlNode.left, data)
+        success = succ;
+        avlNode.left = tempNode;
+
+        if (_getNodeHeight(avlNode.right) - _getNodeHeight(avlNode.left) > 1) {
+            // 不满足平衡条件，需要做调整
+            if (_getNodeHeight(avlNode.right.left) > _getNodeHeight(avlNode.right.right)) {
+                avlNode =  _rlRotate(avlNode)
+            } else {
+                avlNode =  _rrRotate(avlNode)
+            }
+
+        } else {
+            // 满足平衡条件，调整高度即可
+            avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
+        }
 
     } else if (data > avlNode.data) {
 
-        _deleteNodeByAVL(avlNode.left, data)
+        let [succ, tempNode] = _deleteNodeByAVL(avlNode.right, data);
+        success = succ;
+        avlNode.right = tempNode;
 
+        if (_getNodeHeight(avlNode.left) - _getNodeHeight(avlNode.right) > 1) {
+            // 不满足平衡条件，需要做调整
+            if (_getNodeHeight(avlNode.left.left) > _getNodeHeight(avlNode.left.right)) {
+                avlNode =  _llRotate(avlNode)
+            } else {
+                avlNode =  _lrRotate(avlNode)
+            }
+
+        } else {
+            // 满足平衡条件，调整高度即可
+            avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
+        }
     }
 
-    return [sucess, avlNode];
+    return [success, avlNode];
 }
 
 // 获取二叉树的高度
@@ -367,13 +415,13 @@ const _rrRotate = (avlNode) => {
 
 // 左右旋转
 const _lrRotate = (avlNode) => {
-    _rrRotate(avlNode.left);
+    avlNode.left = _rrRotate(avlNode.left);
     return _llRotate(avlNode);
 }
 
 // 右左旋转
 const _rlRotate = (avlNode) => {
-    _llRotate(avlNode.right);
+    avlNode.right = _llRotate(avlNode.right);
     return _rrRotate(avlNode);
 }
 
