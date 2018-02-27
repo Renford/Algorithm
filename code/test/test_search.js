@@ -36,24 +36,24 @@ console.log('\n========BST node 45 delete result:', rlt23);
 tree2.travalTreeByInOrder(tree2.root);
 
 
-// console.log('============2、平衡二叉树: AVL树\n')
+console.log('============2、平衡二叉树: AVL树\n')
 
-// const arr3 = [45, 1, 2, 55, 98, 4];
-// const tree3 = new search.AVLBinaryTree(arr3);
-// console.log('tree3==========avl tree:');
-// tree3.travalTreeByPreOrder(tree3.root);
-// tree3.travalTreeByInOrder(tree3.root);
-// tree3.travalTreeByPostOrder(tree3.root);
+const arr3 = [45, 1, 2, 55, 98, 4];
+const tree3 = new search.AVLBinaryTree(arr3);
+console.log('tree3==========avl tree:');
+tree3.travalTreeByPreOrder(tree3.root);
+tree3.travalTreeByInOrder(tree3.root);
+tree3.travalTreeByPostOrder(tree3.root);
 
-// let rlt31 = tree3.searchNode(55);
-// console.log('\n========AVL node 55 search result:', rlt31);
+let rlt31 = tree3.searchNode(55);
+console.log('\n========AVL node 55 search result:', rlt31);
 
-// const rlt32 = tree3.deleteNodeByAVL(45);
-// console.log('\n========AVL node 45 delete result:', rlt32);
-// tree3.travalTreeByInOrder(tree3.root);
-// const rlt33 = tree3.deleteNodeByAVL(100);
-// console.log('\n========AVL node 100 delete result:', rlt33);
-// tree3.travalTreeByInOrder(tree3.root);
+const rlt32 = tree3.deleteNodeByAVL(45);
+console.log('\n========AVL node 45 delete result:', rlt32);
+tree3.travalTreeByInOrder(tree3.root);
+const rlt33 = tree3.deleteNodeByAVL(100);
+console.log('\n========AVL node 100 delete result:', rlt33);
+tree3.travalTreeByInOrder(tree3.root);
 
 
 // console.log('============3、平衡二叉树: 红黑树\n')

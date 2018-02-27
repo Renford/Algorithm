@@ -4,9 +4,11 @@ const BinarySearchTree = tree.BinarySearchTree;
 
 // =========平衡二叉树：AVL树
 
-class AVLNode extends BinaryTreeNode {
+class AVLNode {
     constructor(data, height, left, right) {
-        super(data, left, right);
+        this.data = data;
+        this.left = left;
+        this.right = right;
         this.height = height;
     }
 }
@@ -44,14 +46,13 @@ class AVLBinaryTree extends BinarySearchTree {
 }
 
 const _insertNodeByAVL = (avlNode, data) => {
-    let sucess = true;
+    let success = true;
     if (avlNode == null) {
         avlNode = new AVLNode(data);
     } else if (data < avlNode.data) {
-        let [sucess, leftNode] = _insertNodeByAVL(avlNode.left, data);
-        if (sucess == true) {
-            avlNode.left = leftNode;
-        }
+        let [succ, leftNode] = _insertNodeByAVL(avlNode.left, data);
+        avlNode.left = leftNode;
+        success = succ;
 
         if (_getNodeHeight(avlNode.left) - _getNodeHeight(avlNode.right) > 1) {
             if (data < avlNode.left.data) {
@@ -63,10 +64,9 @@ const _insertNodeByAVL = (avlNode, data) => {
             }
         }
     } else if (data > avlNode.data) {
-        let [success, rightNode] = _insertNodeByAVL(avlNode.right, data);
-        if (sucess == true) {
-            avlNode.right = rightNode;
-        }
+        let [succ, rightNode] = _insertNodeByAVL(avlNode.right, data);
+        success = succ;
+        avlNode.right = rightNode;
        
         if (_getNodeHeight(avlNode.right) - _getNodeHeight(avlNode.left) > 1) {
             if (data > avlNode.right.data) {
@@ -79,12 +79,12 @@ const _insertNodeByAVL = (avlNode, data) => {
         }
     } else {
         // 重复数据、插入失败
-        sucess = false
+        success = false
     }
 
     avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
 
-    return [sucess, avlNode];
+    return [success, avlNode];
 }
 
 
@@ -203,23 +203,11 @@ const _getMinNode = (node) => {
 // LL型：右旋转
 const _llRotate = (avlNode) => {
     return _rightRotate(avlNode);
-    // let node = avlNode.left;
-    // avlNode.left = node.right;
-    // node.right = avlNode;
-    // avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
-    // node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
-    // return node;
 }
 
 // RR型：左旋转
 const _rrRotate = (avlNode) => {
     return _leftRotate(avlNode);
-    // let node = avlNode.right;
-    // avlNode.right = node.left;
-    // node.left = avlNode;
-    // node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
-    // avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
-    // return node;
 }
 
 // LR型：先左子树左旋转，然后在右旋转
