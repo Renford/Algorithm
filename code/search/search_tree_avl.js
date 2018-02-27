@@ -200,36 +200,58 @@ const _getMinNode = (node) => {
     return _getMinNode(node.left);
 }
 
-// 左左旋转
+// LL型：右旋转
 const _llRotate = (avlNode) => {
-    let node = avlNode.left;
-    avlNode.left = node.right;
-    node.right = avlNode;
-    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
-    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
-    return node;
+    return _rightRotate(avlNode);
+    // let node = avlNode.left;
+    // avlNode.left = node.right;
+    // node.right = avlNode;
+    // avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
+    // node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
+    // return node;
 }
 
-// 右右旋转
+// RR型：左旋转
 const _rrRotate = (avlNode) => {
-    let node = avlNode.right;
-    avlNode.right = node.left;
-    node.left = avlNode;
-    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
-    avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
-    return node;
+    return _leftRotate(avlNode);
+    // let node = avlNode.right;
+    // avlNode.right = node.left;
+    // node.left = avlNode;
+    // node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
+    // avlNode.height = Math.max(_getNodeHeight(avlNode.left), _getNodeHeight(avlNode.right)) + 1;
+    // return node;
 }
 
-// 左右旋转
+// LR型：先左子树左旋转，然后在右旋转
 const _lrRotate = (avlNode) => {
     avlNode.left = _rrRotate(avlNode.left);
     return _llRotate(avlNode);
 }
 
-// 右左旋转
+// RL型：先右子树右旋转，然后在左旋转
 const _rlRotate = (avlNode) => {
     avlNode.right = _llRotate(avlNode.right);
     return _rrRotate(avlNode);
+}
+
+// 左旋转
+const _leftRotate = (node) => {
+    let tempNode = node.right;
+    node.right = tempNode.left;
+    tempNode.left = node;
+    tempNode.height = Math.max(_getNodeHeight(tempNode.left), _getNodeHeight(tempNode.right)) + 1;
+    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
+    return tempNode;
+}
+
+// 右旋转
+const _rightRotate = (node) => {
+    let tempNode = node.left;
+    node.left = tempNode.right;
+    tempNode.right = node;
+    node.height = Math.max(_getNodeHeight(node.left), _getNodeHeight(node.right)) + 1;
+    tempNode.height = Math.max(_getNodeHeight(tempNode.left), _getNodeHeight(tempNode.right)) + 1;
+    return tempNode;
 }
 
 module.exports = {

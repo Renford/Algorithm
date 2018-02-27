@@ -1,9 +1,15 @@
 
 // -------------------------二叉树------------------------------//
 
+// todo: 
+// ===1、二叉树节点添加parent，方便查找
+// ===2、左右旋转方法提取到二叉树BinaryTree中
+// 3、子类旋转统统采用LR、LL型...
+// ===4、重构BST插入、删除算法
 class BinaryTreeNode {
-    constructor(data, left, right) {
+    constructor(data, parent, left, right) {
         this.data = data;
+        this.parent = parent;
         this.left = left;
         this.right = right;
     }
@@ -45,6 +51,67 @@ class BinaryTree {
         this.travalTreeByPostOrder(node.right);
         console.log('post order:', node.data);
     }
+
+    // 左旋转：即将当前节点作为左子树
+    leftRotate(node) {
+        if (node == null) {
+            return null;
+        }
+    
+        let tempNode = node.right;
+        node.right = tempNode.left;
+    
+        if (tempNode.left == null) {
+            tempNode.left.parent = node;
+        }
+        tempNode.parent = node.parent;
+    
+        if (node.parent != null) {
+            if (node == node.parent.left) {
+                node.parent.left = tempNode;
+            } else {
+                node.parent.right = tempNode;
+            }
+        } else {
+            // 根节点
+            this.root = tempNode;
+        }
+    
+        tempNode.left = node;
+        node.parent = tempNode;
+    
+        return tempNode;
+    }
+
+    // 右旋转：即将当前节点作为右子树
+    rightRotate(node) {
+        if (node == null) {
+            return null;
+        }
+    
+        let tempNode = node.left;
+        node.left = tempNode.right;
+    
+        if (tempNode.right == null) {
+            tempNode.right.parent = node;
+        }
+        tempNode.parent = node.parent;
+    
+        if (node.parent != null) {
+            if (node == node.parent.left) {
+                node.parent.left = tempNode;
+            } else {
+                node.parent.right = tempNode;
+            }
+        } else {
+            this.root = tempNode;
+        }
+    
+        tempNode.right = node;
+        node.parent = tempNode;
+    
+        return tempNode;
+    }
 }
 
 // -------------------------二叉搜索树------------------------------//
@@ -73,104 +140,26 @@ class BinarySearchTree extends BinaryTree {
 
     // 节点插入，返回sucess
     insertNodeByBST(data) {
-
-        if (data == null) {
-            return false;
-        }
-
-        let node = new BinaryTreeNode(data);
-        if (this.root == null) {
-            this.root = node;
-            return true;
-        }
-
-        let success = true;
-        let tempNode = this.root;
-        while (1) {
-            if (data > tempNode.data) {
-                if (tempNode.right == null) {
-                    tempNode.right = node;
-                    break;
-                } else {
-                    tempNode = tempNode.right;
-                }
-            } else if (data < tempNode.data) {
-                if (tempNode.left == null) {
-                    tempNode.left = node;
-                    break;
-                } else {
-                    tempNode = tempNode.left;
-                }
-            } else {
-                success = false;
-                break;
-            }
-        }
-
+        let [success, node] = _insertNode(data, this.root);
+        this.root = node;
         return success;
     }
 
     // 删除节点，返回sucess
     deleteNodeByBST(data) {
-        
-        let [node, superNode] = _searchNodeAndSuper(this.root, data);
-        if (node == null) {
-            return false;
-        }  
-        
-        let result = true;
-        if (node.left == null && node.right == null) {
-            // 叶子节点:直接删除
-            if (superNode == null) {
-                this.root = null;
-            } else if (superNode.left == node) {
-                superNode.left = null;
-            } else if (superNode.right == node) {
-                superNode.right = null;
-            }
-        } else if (node.left != null && node.right == null) {
-            // 只有左子树:
-            if (superNode == null) {
-                this.root = node.left
-            } else if (superNode.left == node) {
-                superNode.left = node.left;
-            } else if (superNode.right == node) {
-                superNode.right = node.left;
-            }
+        let [success, node] = _deleteNode(data, this.root, this.root);
+        this.root = node;
+        return success;
+    }
 
-        } else if (node.left == null && node.right != null) {
-            // 只有右子树:
-            if (superNode == null) {
-                this.root = node.right
-            } else if (superNode.left == node) {
-                superNode.left = node.right;
-            } else if (superNode.right == node) {
-                superNode.right = node.right;
-            }
-        } else {
-            // 左右都有:左子树的最右孩子（或者右子树的最左孩子），与该节点兑换，删除叶子节点
-            let [left_rightNode, left_rightSuperNode] = [node.left, null];
-            while(left_rightNode.right != null) {
-                left_rightSuperNode = left_rightNode;
-                left_rightNode = left_rightNode.right;
-            }
+    // 获取最大节点
+    getMaxNode(node) {
+        return _getMaxNode(node);
+    }
 
-            left_rightNode.left = node.left;
-            left_rightNode.right = node.right;
-            if (superNode == null) {
-                this.root = left_rightNode;
-            } else if (superNode.left == node) {
-                superNode.left = left_rightNode;
-            } else if (superNode.right == node) {
-                superNode.right = left_rightNode;
-            }
-
-            node.left = null;
-            node.right = null;
-            left_rightSuperNode.right = null;
-        }
-
-        return result;
+    // 获取最小节点
+    getMinNode(node) {
+        return _getMinNode(node);
     }
 }
 
@@ -188,23 +177,109 @@ const _searchNode = (node, data) => {
     }
 }
 
-// 查找，存在：返回该节点与父节点，不存在：返回[null, super]
-const _searchNodeAndSuper = (tree, data) => {
-    let node = tree;
-    let superNode = null;
-    while (node != null) {
-        if (data < node.data) {
-            superNode = node;
-            node = node.left;
-        } else if (data > node.data) {
-            superNode = node;
-            node = node.right;
+const _insertNode = (data, node) => {
+
+    if (node == null) {
+        let tempNode = new BinaryTreeNode(data);
+        return [true, tempNode];
+    }
+
+    if (data == node.data) {
+        return [false, null];
+    }
+
+    let success = true;
+    if (data < node.data) {
+        let [succ, tempNode] = _insertNode(data, node.left);
+        success = succ;
+        node.left = tempNode;
+        tempNode.parent = node;
+    } else {
+        let [succ, tempNode] = _insertNode(data, node.right);
+        success = succ;
+        node.right = tempNode;
+        tempNode.parent = node;
+    }
+
+    return [true, node];
+}
+
+const _deleteNode = (data, node) => {
+    if (node == null) {
+        return [false, null];
+    }
+
+    let success = true;
+    if (data < node.data) {
+        let [succ, tempNode] = _deleteNode(data, node.left);
+        success = succ;
+        node.left = tempNode;
+    } else if (data > node.data) {
+        let [succ, tempNode] = _deleteNode(data, node.right);
+        success = succ;
+        node.right = tempNode;
+    } else {
+        if (node.left == null && node.right == null) {
+            // 叶子节点
+            if (node.parent == null) {
+                node = null;
+            } else if (node == node.parent.left) {
+                node.parent.left = null;
+            } else {
+                node.parent.right = null;
+            }
+        } else if (node.left != null && node.right == null) {
+            // 只有左子树
+            if (node.parent == null) {
+                node = node.left;
+            } else if (node == node.parent.left) {
+                node.parent.left = node.left;
+            } else {
+                node.parent.right = node.left;
+            }
+        } else if (node.left == null && node.right != null) {
+            // 只有右子树
+            if (node.parent == null) {
+                node = node.right;
+            } else if (node == node.parent.left) {
+                node.parent.left = node.right;
+            } else {
+                node.parent.right = node.right;
+            }
         } else {
-            break;
+            // 左右都有:左子树的最右孩子（或者右子树的最左孩子），与该节点兑换，删除叶子节点
+            let leftMaxNode = _getMaxNode(node.left);
+            node.data = leftMaxNode.data;
+            let [succ, tempNode] = _deleteNode(leftMaxNode, leftMaxNode.data);
+            success = succ;
         }
     }
-    return [node, superNode];
+
+    return [success, node];
 }
+
+// 获取二叉搜索树最小值的节点
+const _getMinNode = (node) => {
+    if (node == null) {
+        return null;
+    }
+    if (node.left == null) {
+        return node;
+    }
+    return _getMinNode(node.left);
+}
+
+// 获取二叉树最大值的节点
+const _getMaxNode = (node) => {
+    if (node == null) {
+        return null;
+    }
+    if (node.right == null) {
+        return node;
+    }
+    return _getMaxNode(node.right);
+}
+
 
 module.exports = {
     BinaryTreeNode: BinaryTreeNode,
