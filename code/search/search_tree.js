@@ -128,7 +128,7 @@ class BinarySearchTree extends BinaryTree {
         if (arr != null) {
             this.root = null;
             for (let i = 0; i < arr.length; i++) {
-                this.insertNodeByBST(arr[i]);
+                this.insertNode(arr[i]);
             }
         }
     }
@@ -139,14 +139,14 @@ class BinarySearchTree extends BinaryTree {
     }
 
     // 节点插入，返回sucess
-    insertNodeByBST(data) {
+    insertNode(data) {
         let [success, node] = _insertNode(data, this.root);
         this.root = node;
         return success;
     }
 
     // 删除节点，返回sucess
-    deleteNodeByBST(data) {
+    deleteNode(data) {
         let [success, node] = _deleteNode(data, this.root, this.root);
         this.root = node;
         return success;

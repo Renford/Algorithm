@@ -8,8 +8,7 @@ const BinarySearchTree = tree.BinarySearchTree;
 // 2.red，布尔值，false表示黑色，true表示红色
 class RBTreeNode extends BinaryTreeNode {
     constructor(data, red, parent, left, right) {
-        super(data, left, right);
-        this.parent = parent;   
+        super(data, parent, left, right);
         this.red = red;         
     }
 }

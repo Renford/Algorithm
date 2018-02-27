@@ -21,7 +21,7 @@ class AVLBinaryTree extends BinarySearchTree {
             this.root = null;
             for (let i = 0; i < arr.length; i++) {
                 let success = this.insertNodeByAVL(arr[i]);
-                console.log('insert======', arr[i], success);
+                console.log('avl node insert======', arr[i], success);
             }
         }
     }

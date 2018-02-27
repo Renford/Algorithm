@@ -28,10 +28,10 @@ tree2.travalTreeByPostOrder(tree2.root);
 let rlt21 = tree2.searchNode(55);
 console.log('\n========BST node 55 search result:', rlt21);
 
-let rlt22 = tree2.deleteNodeByBST(77);
+let rlt22 = tree2.deleteNode(77);
 console.log('\n========BST node 77 delete result:', rlt22);
 tree2.travalTreeByInOrder(tree2.root);
-let rlt23 = tree2.deleteNodeByBST(45);
+let rlt23 = tree2.deleteNode(45);
 console.log('\n========BST node 45 delete result:', rlt23);
 tree2.travalTreeByInOrder(tree2.root);
 
