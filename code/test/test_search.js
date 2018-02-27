@@ -1,7 +1,7 @@
 
 const search = require('../search');
 
-console.log('\n\n============二分查找相关测试==============\n\n')
+console.log('\n\n============1、二分查找相关测试==============\n\n')
 
 const arr1 = [1, 12, 16, 33, 123, 459, 987, 1234, 34567, 98765];
 
@@ -13,9 +13,7 @@ const rlt13 = search.fibonacciSearch(arr1, 123);
 console.log('fibonacci Search:', rlt13);
 
 
-console.log('\n\n============二叉树相关测试==============\n\n')
-
-console.log('============1、二叉搜索树\n')
+console.log('\n\n============2、二叉搜索树相关测试==============\n\n')
 
 const arr2 = [45, 1, 2, 55, 98, 4, 12, 34, 54, 66, 88];
 
@@ -36,7 +34,7 @@ console.log('\n========BST node 45 delete result:', rlt23);
 tree2.travalTreeByInOrder(tree2.root);
 
 
-console.log('============2、平衡二叉树: AVL树\n')
+console.log('\n\n============3、平衡二叉树: AVL树相关测试==============\n\n')
 
 const arr3 = [45, 1, 2, 55, 98, 4];
 const tree3 = new search.AVLBinaryTree(arr3);
@@ -56,7 +54,7 @@ console.log('\n========AVL node 100 delete result:', rlt33);
 tree3.travalTreeByInOrder(tree3.root);
 
 
-// console.log('============3、平衡二叉树: 红黑树\n')
+console.log('\n\n============4、平衡二叉树: 红黑树相关测试==============\n\n')
 
 // // const arr4 = [11, 2, 14, 1, 7, 15, 5, 8, 4];
 // const arr4 = [11, 2, 14, 1];
@@ -65,4 +63,7 @@ tree3.travalTreeByInOrder(tree3.root);
 // tree4.travalTreeByInOrder();
 
 
-
+console.log('\n\n============5、平衡二叉树: 伸展树相关测试==============\n\n')
+const arr5 = [8, 11, 9, 14, 1];
+const tree5 = new search.SplayTree(arr5);
+tree5.travalTreeByInOrder(tree5.root);

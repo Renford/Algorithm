@@ -61,7 +61,7 @@ class BinaryTree {
         let tempNode = node.right;
         node.right = tempNode.left;
     
-        if (tempNode.left == null) {
+        if (tempNode.left != null) {
             tempNode.left.parent = node;
         }
         tempNode.parent = node.parent;
@@ -92,7 +92,7 @@ class BinaryTree {
         let tempNode = node.left;
         node.left = tempNode.right;
     
-        if (tempNode.right == null) {
+        if (tempNode.right != null) {
             tempNode.right.parent = node;
         }
         tempNode.parent = node.parent;
@@ -125,8 +125,8 @@ class BinarySearchTree extends BinaryTree {
     constructor(arr) {
         super();
 
+        this.root = null;
         if (arr != null) {
-            this.root = null;
             for (let i = 0; i < arr.length; i++) {
                 this.insertNode(arr[i]);
             }
