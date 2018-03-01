@@ -4,7 +4,6 @@ const BinaryTreeNode = tree.BinaryTreeNode;
 const BinarySearchTree = tree.BinarySearchTree;
 
 // =========平衡二叉树：伸展树
-// todo:调试插入方法
 
 class SplayTreeNode extends BinaryTreeNode {
   
@@ -46,24 +45,26 @@ const _insertNode = (data, node, that) => {
     } 
     
     let success = true;
+    let tempNode = null;
     if (data < node.data) {
 
         let [success, tempNode] = _insertNode(data, node.left, that);
         node.left = tempNode;
         tempNode.parent = node;
-        
-        // node = _treeSplay(tempNode, that);
 
     } else if (data > node.data) {
         
         let [success, tempNode] = _insertNode(data, node.right, that);
         node.right = tempNode;
         tempNode.parent = node;
-
-        // node = _treeSplay(tempNode, that);
         
     } else {
         success = false;
+    }
+
+    if (success && tempNode != null && tempNode.left == null && tempNode.right == null) {
+        // 新节点插入，完成伸展操作
+        that.root = _treeSplay(tempNode, that);
     }
 
     return [success, node];
@@ -73,7 +74,7 @@ const _deleteNode = (node, data, that) => {
     
 }
 
-// 将tree的node旋转到根节点
+// 将node旋转到根节点
 const _treeSplay = (node, that) => {
     if (node == that.root) {
         return node;
@@ -88,25 +89,28 @@ const _treeSplay = (node, that) => {
                 tempNode = that.leftRotate(node.parent);
             }
         } else {
-            if (node.parent == node.parent.parent.left) {
-                if (node == node.parent.left) {
+            let parent = node.parent;
+            let grandfather = parent.parent;
+
+            if (parent == grandfather.left) {
+                if (node == parent.left) {
                     // LL
-                    tempNode = that.rightRotate(node.parent.parent);
-                    tempNode = that.rightRotate(node.parent);
+                    tempNode = that.rightRotate(grandfather);
+                    tempNode = that.rightRotate(parent);
                 } else {
                     // LR
-                    tempNode = that.leftRotate(node.parent.parent.left)
-                    tempNode = that.rightRotate(node.parent);
+                    grandfather.left = that.leftRotate(grandfather.left)
+                    tempNode = that.rightRotate(grandfather);
                 }
             } else {
                 if (node == node.parent.left) {
                     // RL
-                    node.parent.parent.right = that.rightRotate(node.parent.parent.right)
-                    tempNode = that.leftRotate(node.parent);
+                    grandfather.right = that.rightRotate(grandfather.right)
+                    tempNode = that.leftRotate(grandfather);
                 } else {
                     // RR
-                    tempNode = that.leftRotate(node.parent.parent);
-                    tempNode = that.leftRotate(node.parent);
+                    tempNode = that.leftRotate(grandfather);
+                    tempNode = that.leftRotate(parent);
                 }
             }
         }
