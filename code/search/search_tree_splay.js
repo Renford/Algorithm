@@ -24,7 +24,11 @@ class SplayTree extends BinarySearchTree {
     }
 
     searchNode(data) {
-        return super.searchNode(data)
+        let tempNode = super.searchNode(data);
+        if (tempNode != null) {
+            this.root = _treeSplay(tempNode, this);
+        }
+        return tempNode;
     }
 
     insertNode(data) {
@@ -65,11 +69,6 @@ const _insertNode = (data, node, that) => {
     } else {
         success = false;
     }
-
-    // if (success && tempNode != null && tempNode.left == null && tempNode.right == null) {
-    //     // 新节点插入，完成伸展操作
-    //     that.root = _treeSplay(tempNode, that);
-    // }
 
     return [success, node];
 }
