@@ -23,6 +23,7 @@ class SplayTree extends BinarySearchTree {
         }
     }
 
+    // 节点查找，将查找的节点作为根节点
     searchNode(data) {
         let tempNode = super.searchNode(data);
         if (tempNode != null) {
@@ -31,9 +32,9 @@ class SplayTree extends BinarySearchTree {
         return tempNode;
     }
 
+    // 节点插入，将新节点为根节点
     insertNode(data) {
-        let [success, node] = _insertNode(data, this.root, this);
-        this.root = node;
+        let success = super.insertNode(data);
 
         let tempNode = this.searchNode(data);
         this.root = _treeSplay(tempNode, this);
@@ -41,41 +42,20 @@ class SplayTree extends BinarySearchTree {
         return success;
     }
 
+    // 节点删除，将需删除节点的父节点作为根节点
     deleteNode(data) {
-        
+        let tempNode = super.searchNode(data);
+        tempNode = tempNode.parent;
+
+        let success = super.deleteNode(data);
+
+        if (tempNode != null) {
+            this.root = _treeSplay(tempNode, this);
+        }
+
+        return success;
     }
 } 
-
-
-const _insertNode = (data, node, that) => {
-    if (node == null) {
-        return [true, new SplayTreeNode(data)];
-    } 
-    
-    let success = true;
-    let tempNode = null;
-    if (data < node.data) {
-
-        let [success, tempNode] = _insertNode(data, node.left, that);
-        node.left = tempNode;
-        tempNode.parent = node;
-
-    } else if (data > node.data) {
-        
-        let [success, tempNode] = _insertNode(data, node.right, that);
-        node.right = tempNode;
-        tempNode.parent = node;
-        
-    } else {
-        success = false;
-    }
-
-    return [success, node];
-}
-
-const _deleteNode = (node, data, that) => {
-    
-}
 
 // 将node旋转到根节点
 const _treeSplay = (node, that) => {

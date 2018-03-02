@@ -67,6 +67,8 @@ console.log('\n\n============5、平衡二叉树: 伸展树相关测试=========
 const arr5 = [8, 11, 9, 14, 1];
 const tree5 = new search.SplayTree(arr5);
 tree5.travalTreeByInOrder(tree5.root);
-const node50 = tree5.searchNode(8);
-const node51 = tree5.searchNode(9);
-const node52 = tree5.searchNode(11);
+const rlt50 = tree5.searchNode(8);
+const rlt51 = tree5.searchNode(11);
+
+const rlt52 = tree5.deleteNode(9);
+tree5.travalTreeByInOrder(tree5.root);

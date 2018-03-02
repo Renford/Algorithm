@@ -184,21 +184,18 @@ const _insertNode = (data, node) => {
         return [true, tempNode];
     }
 
-    if (data == node.data) {
-        return [false, null];
-    }
-
     let success = true;
     if (data < node.data) {
-        let [succ, tempNode] = _insertNode(data, node.left);
-        success = succ;
+        let [success, tempNode] = _insertNode(data, node.left);
         node.left = tempNode;
         tempNode.parent = node;
-    } else {
-        let [succ, tempNode] = _insertNode(data, node.right);
-        success = succ;
+    } else if (data > node.data) {
+        let [success, tempNode] = _insertNode(data, node.right);
         node.right = tempNode;
         tempNode.parent = node;
+    } else {
+        success = false;
+        node = null;
     }
 
     return [true, node];
