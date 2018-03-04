@@ -25,7 +25,7 @@ class RBTree extends BinarySearchTree {
         this.root = null;
         for (let i = 0; i < arr.length; i++) {
             let success = this.insertNode(arr[i]);
-            // console.log('rb tree node insert======', arr[i], success);
+            console.log('rb tree node insert======', arr[i], success);
         }
     }
 
@@ -38,10 +38,7 @@ class RBTree extends BinarySearchTree {
     }
 
     insertNode(data) {
-        let [succ, tempNode] = _insertNode(data, this.root, this.root); 
-        this.root = tempNode;
-        // console.log('insert result =========after', this.root);
-        return succ;
+        return _insertNode(data, this);
     }
 
     deleteNode(data) {
@@ -64,70 +61,67 @@ const _travalTreeByInOrder = (node) => {
 // 3. 插入节点的父节点为黑色，不需要处理
 // 4. 插入节点的父节点、叔父节点为红色，将父节点、叔父节点都设为黑色，将祖父节点设为红色，当前节点变为祖父节点
 // 5. 插入节点的父节点为红色、叔父节点为黑色，如当前节点为父节点的左子树，则将父节点作为当前节点，进行左旋转；反之，则将父节点作为当前节点，进行右旋转
-const _insertNode = (data, currNode, root) => {
-
-    // console.log('========insert', data, currNode, root);
-
-    if (root == null) {
-        // 插入根节点
-        let node = new RBTreeNode(data, false);
-        return [true, node];
-    } else if (currNode == null) {
-        // 插入非根节点
-        let node = new RBTreeNode(data, true);
-        return [true, node];
+const _insertNode2 = (data, that) => {
+    if (that.root == null) {
+        that.root = new RBTreeNode(data, false);
+        return true;
     }
 
     let success = true;
     let node = new RBTreeNode(data, true);
-    if (currNode.data == data) {
-        // 数据存在，插入失败
-        success = false
-    } else if (data < currNode.data) {
 
-        let [succ, tempNode] = _insertNode(data, currNode.left, root);
-        success = succ;
-        currNode.left = tempNode;
-        tempNode.parent = currNode;
-
-        // console.log('========insert before', data, currNode);
-        // currNode = tempNode;
-        currNode = _fixRBTree(tempNode, root);
-
-        // console.log('========insert after', data, currNode);
-
-    } else if (data > currNode.data) {
-
-        let [succ, tempNode] = _insertNode(data, currNode.right, root);
-        success = succ;
-        currNode.right = tempNode;
-        tempNode.parent = currNode;
-
-        // currNode = tempNode;
-        currNode = _fixRBTree(tempNode, root);
-
+    let tempNode = that.root;
+    while (tempNode != null) {
+        if (data < tempNode.data) {
+            if (tempNode.left == null) {
+                tempNode.left = node;
+                node.parent = tempNode;
+                break;
+            } else {
+                tempNode = tempNode.left;
+            }
+        } else if (data > tempNode.data) {
+            if (tempNode.right == null) {
+                tempNode.right = node;
+                node.parent = tempNode;
+                break;
+            } else {
+                tempNode = tempNode.right;
+            }
+        } else {
+            success == false;
+            break;
+        }
     }
 
-    // currNode = _fixRBTree(currNode);
-    console.log('========insert', data, root);
+    if (success) {
+        _fixRBTree(node, that);
+    }
 
-    return [success, currNode];
+    return success;
 }
 
-const _deleteNode = (currNode, data) => {
+const _deleteNode = (data, that) => {
 
 }
 
 // 按照红黑树的规则调整二叉树
-const _fixRBTree = (node, root) => {
-    console.log('===============red:', node.data, root);
+const _fixRBTree = (node, that) => {
+    if (node == null || node.parent == null) {
+        return;
+    }
 
-    if (node == null) {
-        return root;
-    } else if (node.parent == null) {
-        return root;
-    } else if (node.parent.parent == null) {
-        return node
+    if (!node.parent.red) {
+        return;
+    }
+    
+    if (node.parent.parent == null) {
+        if (node == node.parent.left) {
+            that.root = that.rightRotate(node.parent);
+        } else {
+            that.root = that.leftRotate(node.parent);
+        }
+        return;
     }
 
     let parent = node.parent;
@@ -137,148 +131,78 @@ const _fixRBTree = (node, root) => {
         // 父节点是祖父节点的左子树
 
         let uncle = grandfather.right;
+        if (uncle && uncle.red) {
+            uncle.red = false;
+        }
 
-        // console.log('==========uncle', uncle);
+        if (node == parent.right) {
+            node = parent;
+            grandfather.left = that.leftRotate(parent, that);
 
-        if (parent.red && uncle) {
-            if (uncle.red) {
-                parent.red = false;
-                uncle.red = false;
-                grandfather.red = true;
-                
-                // console.log('===============left before:', node.data, root);
-                root = _fixRBTree(grandfather, root);
-                // console.log('===============left after:', node.data, root);
+            parent = node.parent;
+            grandfather = parent.parent
+        }
 
-            } else {
+        parent.red = false;
+        grandfather.red = true;
 
-                let tempNode = null;
-                if (node == parent.left) {
-                    tempNode = _rlRotate(grandfather);
-                } else {
-                    tempNode = _rightRotate(grandfather);
-                }
-
-                if (tempNode.parent == null) {
-                    root = tempNode;
-                } else if (grandfather.parent.left == grandfather) {
-                    grandfather.left = tempNode;
-                } else {
-                    grandfather.right = tempNode;
-                }
-            }
-        } 
+        let tempNode = that.rightRotate(grandfather, that);
+        if (tempNode.parent == null) {
+            that.root = tempNode;
+        } else if (grandfather.parent.left == grandfather) {
+            grandfather.parent.left = tempNode;
+        } else {
+            grandfather.parent.right = tempNode;
+        }
 
     } else {
         // 父节点是祖父节点的右子树
-
         let uncle = grandfather.left;
 
-        if (parent.red && uncle) {
-            if (uncle.red) {
-                parent.red = false;
-                uncle.red = false;
-                grandfather.red = true;
-                
-                // root = _fixRBTree(parent.parent);
-                
-                // console.log('===============right before:', node.data, root);
-                root = _fixRBTree(grandfather, root);
-                // console.log('===============right after:', node.data, root);
+        if (uncle && uncle.red) {
+            uncle.red = false;
+        }
 
-            } else {
-                let tempNode = null;
-                if (node == parent.right) {
-                    tempNode = _lrRotate(grandfather);
-                } else {
-                    tempNode = _leftRotate(grandfather);
-                }
-                if (tempNode.parent == null) {
-                    root = tempNode;
-                } else if (grandfather.parent.left == grandfather) {
-                    grandfather.left = tempNode;
-                } else {
-                    grandfather.right = tempNode;
-                }
-            }
+        if (node == parent.left) {
+            node = parent;
+            grandfather.right = that.rightRotate(parent, that);
+
+            parent = node.parent;
+            grandfather = parent.parent;
         } 
-    }
 
+        parent.red = false;
+        grandfather.red = true;
 
-    console.log('root=========root', root)
-
-
-    return root
-}
-
-// 左旋转
-const _leftRotate = (node) => {
-
-    let tempNode = node.right;
-    node.right = tempNode.left;
-
-    if (tempNode.left != null) {
-        tempNode.left.parent = node;
-    }
-
-    tempNode.parent = node.parent;
-
-    if (node.parent == null) {
-
-    } else {
-        if (node == node.parent.left) {
-            node.parent.left = tempNode;
+        let tempNode = that.leftRotate(grandfather, that);
+        if (tempNode.parent == null) {
+            that.root = tempNode;
+        } else if (grandfather.parent.left == grandfather) {
+            grandfather.parent.left = tempNode;
         } else {
-            node.parent.right = tempNode;
+            grandfather.parent.right = tempNode;
         }
     }
 
-    tempNode.left = node;
-    node.parent = tempNode;
-
-    return tempNode;
+    _fixRBTree(grandfather, that);
 }
 
-// 右旋转
-const _rightRotate = (node) => {
-
-    console.log('========rotate', node);
-
-    let tempNode = node.left;
-    node.left = tempNode.right;
-
-    if (tempNode.right != null) {
-        tempNode.right.parent = node;
-    }
-
-    tempNode.parent = node.parent;
-
-    if (node.parent == null) {
-
-    } else {
-        if (node == node.parent.right) {
-            node.parent.right = tempNode;
-        } else {
-            node.parent.left = tempNode;
-        }
-    }
-
-    tempNode.right = node;
-    node.parent = tempNode;
-
-    return tempNode;
+const _llRotate = (node, that) => {
+    return that.rightRotate(node);
 }
 
-// 1.左子树右旋转，2.左旋转
-const _lrRotate = (node) => {
-    let tempNode = _rightRotate(node.left);
-    return _leftRotate(node);
+const _lrRotate = (node, that) => {
+    node.left = that.leftRotate(node.left);
+    return that.rightRotate(node);
 }
 
-// 1.右子树左旋转，2.右旋转
-const _rlRotate = (node) => {
-    let tempNode = _leftRotate(node.right);
-    return _rightRotate(node);
+const _rlRotate = (node, that) => {
+    node.right = that.rightRotate(node.right);
+    return that.leftRotate(node);
+}
+
+const _rrRotate = (node, that) => {
+    return that.leftRotate(node);
 }
 
 module.exports = {

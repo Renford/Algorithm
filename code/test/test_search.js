@@ -56,19 +56,18 @@ tree3.travalTreeByInOrder(tree3.root);
 
 console.log('\n\n============4、平衡二叉树: 红黑树相关测试==============\n\n')
 
-// // const arr4 = [11, 2, 14, 1, 7, 15, 5, 8, 4];
-// const arr4 = [11, 2, 14, 1];
-// const tree4 = new search.RBTree(arr4);
-// console.log('tree4==========rb tree:');
-// tree4.travalTreeByInOrder();
+const arr4 = [11, 2, 14, 1, 7, 15, 5, 8, 4];
+const tree4 = new search.RBTree(arr4);
+console.log('tree4==========rb tree:');
+tree4.travalTreeByInOrder();
 
 
-console.log('\n\n============5、平衡二叉树: 伸展树相关测试==============\n\n')
-const arr5 = [8, 11, 9, 14, 1];
-const tree5 = new search.SplayTree(arr5);
-tree5.travalTreeByInOrder(tree5.root);
-const rlt50 = tree5.searchNode(8);
-const rlt51 = tree5.searchNode(11);
+// console.log('\n\n============5、平衡二叉树: 伸展树相关测试==============\n\n')
+// const arr5 = [8, 11, 9, 14, 1];
+// const tree5 = new search.SplayTree(arr5);
+// tree5.travalTreeByInOrder(tree5.root);
+// const rlt50 = tree5.searchNode(8);
+// const rlt51 = tree5.searchNode(11);
 
-const rlt52 = tree5.deleteNode(9);
-tree5.travalTreeByInOrder(tree5.root);
+// const rlt52 = tree5.deleteNode(9);
+// tree5.travalTreeByInOrder(tree5.root);
