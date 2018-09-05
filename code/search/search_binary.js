@@ -5,13 +5,13 @@
 const binarySearch = (arr, key) => {
     let start = 0;
     let end = arr.length - 1;
-    while (start < end) {
+    while (start <= end) {
         let mid = Math.floor((start + end) / 2);
         let temp = arr[mid];
         if (key < temp) {
             end = mid - 1;
         } else if (key > temp) {
-            end = mid + 1;
+            start = mid + 1;
         } else {
             return mid;
         }
